@@ -4,10 +4,7 @@ import com.nonsyncbobbal.EcomApplication.model.User;
 import com.nonsyncbobbal.EcomApplication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +22,12 @@ public class UserController {
     public ResponseEntity<String> addUser(@RequestBody User user){
         return  ResponseEntity.ok(userService.addUser(user));
 
+    }
+    @GetMapping("/api/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        if (userService.getUserById(id).isPresent()) {
+            return ResponseEntity.ok(userService.getUserById(id).get());
+        }
+        return ResponseEntity.notFound().build();
     }
 }
