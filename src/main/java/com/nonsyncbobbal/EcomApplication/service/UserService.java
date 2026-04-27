@@ -28,7 +28,7 @@ public class UserService {
 
     public String addUser(UserRequest userRequest){
         User  user = new User();
-        mapToUserRequest(user, userRequest);
+        UpdateUserFromUserRequest(user, userRequest);
         userRepository.save(user);
         return "The user has been created successfully";
     }
@@ -43,7 +43,7 @@ public class UserService {
 
         if(userOptional.isPresent()){
             User user = userOptional.get();
-            mapToUserRequest(user, userRequest);
+            UpdateUserFromUserRequest(user, userRequest);
             userRepository.save(user);
             return true;
         }
@@ -51,7 +51,7 @@ public class UserService {
 
     }
 
-    public void mapToUserRequest(User user, UserRequest userRequest){
+    public void UpdateUserFromUserRequest(User user, UserRequest userRequest){
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
         user.setEmail(userRequest.getEmail());

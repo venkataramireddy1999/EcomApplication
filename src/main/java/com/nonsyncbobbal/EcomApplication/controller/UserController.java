@@ -2,7 +2,6 @@ package com.nonsyncbobbal.EcomApplication.controller;
 
 import com.nonsyncbobbal.EcomApplication.dto.UserRequest;
 import com.nonsyncbobbal.EcomApplication.dto.UserResponse;
-import com.nonsyncbobbal.EcomApplication.model.User;
 import com.nonsyncbobbal.EcomApplication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
