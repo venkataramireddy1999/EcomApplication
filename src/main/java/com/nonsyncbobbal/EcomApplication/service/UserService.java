@@ -16,15 +16,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    //List<User> users = new ArrayList<>(List.of(new User(1, "Venkata", "Ramireddy"),
-    //                                           new User(2, "Nikolay", "Nikolay")));
-
     public List<User> getUsers() {
         return userRepository.findAll();
     }
+
     public String addUser(User user){
         userRepository.save(user);
-        return "User added successfully";
+        return "User added/updated successfully";
     }
     public Optional<User> getUserById(int id){
         return userRepository.findById(id);
