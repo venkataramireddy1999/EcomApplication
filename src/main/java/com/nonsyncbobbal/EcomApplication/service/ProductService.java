@@ -7,7 +7,9 @@ import com.nonsyncbobbal.EcomApplication.repo.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +44,33 @@ public class ProductService {
         productResponse.setImageURL(product.getImageURL());
         productResponse.setIsActive(product.getIsActive());
         return productResponse;
+    }
+
+    public Optional<ProductResponse> updateProduct(int id, ProductRequest productRequest) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if(productOptional.isPresent()) {
+            Product product = productOptional.get();
+            updateProductFromRequest(product, productRequest);
+             Product savedProduct = productRepository.save(product);
+             return Optional.of(mapToProductResponse(savedProduct));
+        }
+        return Optional.empty();
+    }
+
+    public List<ProductResponse> getProducts(){
+        return productRepository.findAll().stream()
+                .map(this::mapToProductResponse).
+                collect(Collectors.toList());
+//        List<ProductResponse> productResponseList = new ArrayList<>();
+//        List<Product> products = productRepository.findAll();
+//        for(Product product : products) {
+//            productResponseList.add(mapToProductResponse(product));
+//        }
+//        return productResponseList;
+    }
+
+    public Optional<ProductResponse> getProductById(int id) {
+        return productRepository.findById(id).
+                map(this::mapToProductResponse);
     }
 }
