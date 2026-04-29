@@ -58,11 +58,11 @@ public class ProductService {
     }
 
     public List<ProductResponse> getProducts(){
-        return productRepository.findAll().stream()
+        return productRepository.findByIsActiveTrue().stream()
                 .map(this::mapToProductResponse).
                 collect(Collectors.toList());
 //        List<ProductResponse> productResponseList = new ArrayList<>();
-//        List<Product> products = productRepository.findAll();
+//        List<Product> products = productRepository.findByIsActiveTrue();
 //        for(Product product : products) {
 //            productResponseList.add(mapToProductResponse(product));
 //        }
@@ -72,5 +72,20 @@ public class ProductService {
     public Optional<ProductResponse> getProductById(int id) {
         return productRepository.findById(id).
                 map(this::mapToProductResponse);
+    }
+
+    public boolean deleteProduct(int id) {
+        return productRepository.findById(id).
+                map(product -> {
+                    product.setIsActive(false);
+                    productRepository.save(product);
+                    return true;
+                }).orElse(false);
+    }
+
+    public List<ProductResponse> searchProducts(String keyword) {
+        return productRepository.searchProducts(keyword).stream().
+                map(this::mapToProductResponse)
+                .collect(Collectors.toList());
     }
 }
