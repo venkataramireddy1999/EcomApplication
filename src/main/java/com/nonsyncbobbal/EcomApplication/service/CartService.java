@@ -27,6 +27,7 @@ public class CartService {
     private final UserRepository userRepository;
 
     public boolean addToCart(String userId, CartRequest cartRequest) {
+        //Validate the product
         Optional<Product> productOptional = productRepository.findById(cartRequest.getProductId());
         if (productOptional.isEmpty())
             return false;
@@ -34,10 +35,12 @@ public class CartService {
         if(!product.getIsActive()) return false;
         if(product.getStockQuantity() < cartRequest.getQuantity())
             return false;
+        //Validate the user
         Optional<User> userOptional = userRepository.findById(Integer.valueOf(userId));
         if (userOptional.isEmpty())
             return false;
         User user = userOptional.get();
+        //Updating the Cart
         Cart existingCart = cartRepository.findByUserAndProduct(user, product);
         if(existingCart != null) {
             //update the cart
@@ -72,7 +75,7 @@ public class CartService {
     public List<CartResponse> getCart(String userId) {
         Optional<List<Cart>> carts = userRepository.findById(Integer.valueOf(userId))
                 .map(cartRepository::findByUser);
-        return carts.map(this::mapToCartResponse).orElse(new ArrayList<>());
+        return carts.map(this::mapToCartResponse).orElseGet(List::of);
 
 
     }
