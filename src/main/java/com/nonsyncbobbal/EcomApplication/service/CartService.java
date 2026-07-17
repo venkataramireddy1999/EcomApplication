@@ -2,6 +2,7 @@ package com.nonsyncbobbal.EcomApplication.service;
 
 import com.nonsyncbobbal.EcomApplication.dto.CartRequest;
 import com.nonsyncbobbal.EcomApplication.dto.CartResponse;
+import com.nonsyncbobbal.EcomApplication.mapper.CartMapper;
 import com.nonsyncbobbal.EcomApplication.model.Cart;
 import com.nonsyncbobbal.EcomApplication.model.Product;
 import com.nonsyncbobbal.EcomApplication.model.User;
@@ -75,23 +76,10 @@ public class CartService {
     public List<CartResponse> getCart(String userId) {
         Optional<List<Cart>> carts = userRepository.findById(Integer.valueOf(userId))
                 .map(cartRepository::findByUser);
-        return carts.map(this::mapToCartResponse).orElseGet(List::of);
+        return carts.map(CartMapper::mapToCartResponse).orElseGet(List::of);
 
 
     }
 
-    private List<CartResponse> mapToCartResponse(List<Cart> carts) {
-        List<CartResponse> cartResponseList = new ArrayList<>();
-        for (Cart cart : carts) {
-            CartResponse cartResponse = new CartResponse();
-            cartResponse.setUserId(cart.getUser().getId());
-            cartResponse.setProductId(cart.getProduct().getId());
-            cartResponse.setProductName(cart.getProduct().getName());
-            cartResponse.setQuantity(cart.getQuantity());
-            cartResponse.setPrice(cart.getPrice());
-            cartResponseList.add(cartResponse);
 
-        }
-        return cartResponseList;
-    }
 }

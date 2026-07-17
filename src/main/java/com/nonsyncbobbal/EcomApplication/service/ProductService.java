@@ -2,7 +2,9 @@ package com.nonsyncbobbal.EcomApplication.service;
 
 import com.nonsyncbobbal.EcomApplication.dto.ProductRequest;
 import com.nonsyncbobbal.EcomApplication.dto.ProductResponse;
+import com.nonsyncbobbal.EcomApplication.mapper.ProductMapper;
 import com.nonsyncbobbal.EcomApplication.model.Product;
+import com.nonsyncbobbal.EcomApplication.repo.OrderRepository;
 import com.nonsyncbobbal.EcomApplication.repo.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,48 +21,30 @@ public class ProductService {
 
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = new Product();
-        updateProductFromRequest(product, productRequest);
+        ProductMapper.updateProductFromRequest(product, productRequest);
         Product savedProduct = productRepository.save(product);
-        return mapToProductResponse(savedProduct);
+        return ProductMapper.mapToProductResponse(savedProduct);
     }
 
-    public void updateProductFromRequest(Product product, ProductRequest productRequest) {
-        product.setName(productRequest.getName());
-        product.setDescription(productRequest.getDescription());
-        product.setPrice(productRequest.getPrice());
-        product.setStockQuantity(productRequest.getStockQuantity());
-        product.setCategory(productRequest.getCategory());
-        product.setImageURL(productRequest.getImageURL());
-    }
 
-    public ProductResponse mapToProductResponse(Product product) {
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setId(product.getId());
-        productResponse.setName(product.getName());
-        productResponse.setDescription(product.getDescription());
-        productResponse.setPrice(product.getPrice());
-        productResponse.setStockQuantity(product.getStockQuantity());
-        productResponse.setCategory(product.getCategory());
-        productResponse.setImageURL(product.getImageURL());
-        productResponse.setIsActive(product.getIsActive());
-        return productResponse;
-    }
+
+
 
     public Optional<ProductResponse> updateProduct(int id, ProductRequest productRequest) {
         Optional<Product> productOptional = productRepository.findById(id);
         if(productOptional.isPresent()) {
             Product product = productOptional.get();
-            updateProductFromRequest(product, productRequest);
-             Product savedProduct = productRepository.save(product);
-             return Optional.of(mapToProductResponse(savedProduct));
+            ProductMapper.updateProductFromRequest(product, productRequest);
+            Product savedProduct = productRepository.save(product);
+            return Optional.of(ProductMapper.mapToProductResponse(savedProduct));
         }
         return Optional.empty();
     }
 
     public List<ProductResponse> getProducts(){
         return productRepository.findByIsActiveTrue().stream()
-                .map(this::mapToProductResponse).
-                collect(Collectors.toList());
+                .map(ProductMapper::mapToProductResponse)
+                .collect(Collectors.toList());
 //        List<ProductResponse> productResponseList = new ArrayList<>();
 //        List<Product> products = productRepository.findByIsActiveTrue();
 //        for(Product product : products) {
@@ -71,7 +55,7 @@ public class ProductService {
 
     public Optional<ProductResponse> getProductById(int id) {
         return productRepository.findById(id).
-                map(this::mapToProductResponse);
+                map(ProductMapper::mapToProductResponse);
     }
 
     public boolean deleteProduct(int id) {
@@ -85,7 +69,7 @@ public class ProductService {
 
     public List<ProductResponse> searchProducts(String keyword) {
         return productRepository.searchProducts(keyword).stream().
-                map(this::mapToProductResponse)
+                map(ProductMapper::mapToProductResponse)
                 .collect(Collectors.toList());
     }
 }
