@@ -46,7 +46,8 @@ public class CartService {
         if(existingCart != null) {
             //update the cart
             existingCart.setQuantity(existingCart.getQuantity() + cartRequest.getQuantity());
-            existingCart.setPrice(product.getPrice().multiply(BigDecimal.valueOf(existingCart.getQuantity())));
+            existingCart.setPrice(product.getPrice().
+                    multiply(BigDecimal.valueOf(existingCart.getQuantity())));
             cartRepository.save(existingCart);
         }
         else{
@@ -54,7 +55,8 @@ public class CartService {
             newCart.setUser(user);
             newCart.setProduct(product);
             newCart.setQuantity(cartRequest.getQuantity());
-            newCart.setPrice(product.getPrice().multiply(BigDecimal.valueOf(newCart.getQuantity())));
+            newCart.setPrice(product.getPrice().
+                    multiply(BigDecimal.valueOf(newCart.getQuantity())));
             cartRepository.save(newCart);
         }
         return true;

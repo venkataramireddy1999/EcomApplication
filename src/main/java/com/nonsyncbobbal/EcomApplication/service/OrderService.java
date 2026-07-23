@@ -11,6 +11,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     public OrderResponse placeOrder(String userId) {
-        return new OrderResponse();
+        //Validate the cart items
+            return new OrderResponse();
     }
 }
